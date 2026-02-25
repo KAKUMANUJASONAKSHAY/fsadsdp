@@ -6,12 +6,13 @@ export default function Portal() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const session = getSession()
-  const [mode, setMode] = useState(searchParams.get('mode') === 'admin' ? 'admin' : 'user')
+  const mode = searchParams.get('mode') === 'admin' ? 'admin' : 'user'
   const [adminCode, setAdminCode] = useState('')
   const [showAdminCode, setShowAdminCode] = useState(false)
   const [error, setError] = useState('')
 
   if (!session) return <Navigate to="/login" replace />
+  if (mode === 'user') return <Navigate to="/reports" replace />
 
   function verifyAdmin(e) {
     e.preventDefault()
@@ -32,7 +33,6 @@ export default function Portal() {
             type="button"
             className={`roleTab ${mode === 'user' ? 'roleTabActive' : ''}`}
             onClick={() => {
-              setMode('user')
               setError('')
               navigate('/reports')
             }}
@@ -43,39 +43,32 @@ export default function Portal() {
             type="button"
             className={`roleTab ${mode === 'admin' ? 'roleTabActive' : ''}`}
             onClick={() => {
-              setMode('admin')
               setError('')
+              navigate('/portal?mode=admin')
             }}
           >
             Admin
           </button>
         </div>
 
-        {mode === 'user' ? (
-          <div className="stack">
-            <h3 style={{ margin: 0 }}>User Access</h3>
-            <div className="small">Opening reports...</div>
+        <form onSubmit={verifyAdmin} className="stack">
+          <h3 style={{ margin: 0 }}>Admin Access</h3>
+          <div className="inlineRow">
+            <input
+              className="control"
+              type={showAdminCode ? 'text' : 'password'}
+              value={adminCode}
+              onChange={e => setAdminCode(e.target.value)}
+              placeholder="Enter Admin Code"
+              required
+            />
+            <button type="button" className="btn" onClick={() => setShowAdminCode(v => !v)}>
+              {showAdminCode ? 'Hide' : 'Show'}
+            </button>
           </div>
-        ) : (
-          <form onSubmit={verifyAdmin} className="stack">
-            <h3 style={{ margin: 0 }}>Admin Access</h3>
-            <div className="inlineRow">
-              <input
-                className="control"
-                type={showAdminCode ? 'text' : 'password'}
-                value={adminCode}
-                onChange={e => setAdminCode(e.target.value)}
-                placeholder="Enter Admin Code"
-                required
-              />
-              <button type="button" className="btn" onClick={() => setShowAdminCode(v => !v)}>
-                {showAdminCode ? 'Hide' : 'Show'}
-              </button>
-            </div>
-            {error && <div className="small" style={{ color: 'var(--danger)' }}>{error}</div>}
-            <button className="btn btn-accent" type="submit">Verify</button>
-          </form>
-        )}
+          {error && <div className="small" style={{ color: 'var(--danger)' }}>{error}</div>}
+          <button className="btn btn-accent" type="submit">Verify</button>
+        </form>
       </section>
     </div>
   )
