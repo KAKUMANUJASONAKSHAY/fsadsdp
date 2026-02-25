@@ -1,11 +1,22 @@
 import React from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import styles from './Navbar.module.css'
 import { clearSession, getSession } from '../services/auth'
 
 export default function Navbar() {
   const navigate = useNavigate()
+  const location = useLocation()
   const session = getSession()
+  const searchParams = new URLSearchParams(location.search)
+  const isAdminSection =
+    location.pathname.startsWith('/admin') ||
+    (location.pathname.startsWith('/portal') && searchParams.get('mode') === 'admin')
+  const isUserSection =
+    location.pathname.startsWith('/reports') ||
+    location.pathname.startsWith('/dashboard') ||
+    location.pathname.startsWith('/student/') ||
+    location.pathname.startsWith('/profile/') ||
+    (location.pathname.startsWith('/portal') && searchParams.get('mode') !== 'admin')
 
   function openAdmin() {
     navigate('/portal?mode=admin')
@@ -44,8 +55,20 @@ export default function Navbar() {
 
         <div className={styles.middleRow}>
           <div className={styles.switchGroup}>
-            <button type="button" className={styles.switchBtn} onClick={openUser}>User</button>
-            <button type="button" className={styles.switchBtn} onClick={openAdmin}>Admin</button>
+            <button
+              type="button"
+              className={`${styles.switchBtn} ${isUserSection ? styles.switchActive : ''}`}
+              onClick={openUser}
+            >
+              User
+            </button>
+            <button
+              type="button"
+              className={`${styles.switchBtn} ${isAdminSection ? styles.switchActive : ''}`}
+              onClick={openAdmin}
+            >
+              Admin
+            </button>
           </div>
 
           <nav className={styles.nav}>

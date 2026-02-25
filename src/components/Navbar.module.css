@@ -119,6 +119,11 @@
   color: #f5fffb;
 }
 
+.switchActive {
+  background: #1f9d78;
+  color: #f5fffb;
+}
+
 .nav {
   display: flex;
   align-items: center;
