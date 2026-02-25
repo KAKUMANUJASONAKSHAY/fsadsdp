@@ -1,0 +1,285 @@
+:root {
+  --bg: #eef7f3;
+  --surface: #ffffff;
+  --surface-soft: #f2faf6;
+  --text: #143126;
+  --muted: #517368;
+  --line: #c9e6d9;
+  --primary: #1f9d78;
+  --primary-soft: #d9f3ea;
+  --danger: #bb4b4b;
+  --radius: 12px;
+  --shadow: 0 10px 24px rgba(23, 83, 61, 0.14);
+  --container: 1120px;
+  font-family: 'Segoe UI Variable', 'Segoe UI', 'Trebuchet MS', ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  color: var(--text);
+  background:
+    radial-gradient(circle at 8% 6%, rgba(31, 157, 120, 0.16) 0, transparent 30%),
+    radial-gradient(circle at 92% 10%, rgba(17, 140, 155, 0.14) 0, transparent 30%),
+    var(--bg);
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Segoe UI Variable', 'Segoe UI', 'Trebuchet MS', ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+a {
+  color: inherit;
+}
+
+.container {
+  width: min(var(--container), calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.appShell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.appMain {
+  flex: 1;
+  padding: 22px 0 30px;
+}
+
+.page {
+  display: grid;
+  gap: 16px;
+}
+
+.pageNarrow {
+  width: min(900px, 100%);
+}
+
+.authCenter {
+  min-height: calc(100vh - 220px);
+  display: grid;
+  place-items: center;
+}
+
+.authCard {
+  width: min(560px, 100%);
+}
+
+.passwordMeter {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.passwordMeter span {
+  height: 8px;
+  border-radius: 999px;
+  background: #d7ddd9;
+}
+
+.roleTabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 6px;
+}
+
+.roleTab {
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.roleTabActive {
+  background: var(--primary);
+  color: #f5fffb;
+}
+
+.inlineRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+.small {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.stack {
+  display: grid;
+  gap: 12px;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.layoutAdmin {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 18px;
+}
+
+.studentGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.achievementList {
+  display: grid;
+  gap: 10px;
+}
+
+.achRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-soft);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 10px;
+  padding: 9px 13px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.14s ease, opacity 0.14s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #f5fffb;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+.btn-accent {
+  background: var(--primary);
+  color: #f5fffb;
+}
+
+.link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.control {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 9px 10px;
+  color: var(--text);
+  font: inherit;
+}
+
+.control:focus {
+  outline: 2px solid var(--primary-soft);
+  border-color: var(--primary);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.empty {
+  color: var(--muted);
+}
+
+@media (max-width: 980px) {
+  .layoutAdmin {
+    grid-template-columns: 1fr;
+  }
+
+  .studentGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .appMain {
+    padding-top: 16px;
+  }
+
+  .twoCol,
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .studentGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .header-row {
+    flex-wrap: wrap;
+  }
+}
