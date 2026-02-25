@@ -17,3 +17,4 @@ export default function AchievementCard({ a, onDelete }) {
     </div>
   )
 }
+

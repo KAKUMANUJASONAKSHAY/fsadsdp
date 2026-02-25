@@ -72,3 +72,4 @@ export function deleteAchievement(studentId, achId) {
   s.achievements = s.achievements.filter(a => a.id !== achId)
   write(store)
 }
+

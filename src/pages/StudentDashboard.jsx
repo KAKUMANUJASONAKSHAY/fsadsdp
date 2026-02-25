@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import AchievementCard from '../components/AchievementCard'
-import { getStudentById } from '../services/Storage.jsx'
+import { getStudentById } from '../services/storage'
 
 export default function StudentDashboard() {
   const { id } = useParams()
@@ -38,3 +38,4 @@ export default function StudentDashboard() {
     </div>
   )
 }
+

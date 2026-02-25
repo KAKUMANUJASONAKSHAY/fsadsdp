@@ -87,3 +87,4 @@ export function getSession() {
 export function clearSession() {
   localStorage.removeItem(SESSION_KEY)
 }
+
