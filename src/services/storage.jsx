@@ -18,6 +18,44 @@ function migrateRollNumbers(data) {
   return { changed, data: { ...data, students } }
 }
 
+function migrateSeedStudents(data) {
+  let changed = false
+  const existing = data.students || []
+  const existingIds = new Set(existing.map(s => s.id))
+  const missingStudents = (sampleData.students || []).filter(s => !existingIds.has(s.id))
+  if (missingStudents.length === 0) return { changed, data }
+
+  changed = true
+  return {
+    changed,
+    data: {
+      ...data,
+      students: [...existing, ...missingStudents]
+    }
+  }
+}
+
+function migrateSeedAchievements(data) {
+  let changed = false
+  const seedStudents = sampleData.students || []
+  const students = (data.students || []).map(student => {
+    const seed = seedStudents.find(s => s.id === student.id)
+    if (!seed || !Array.isArray(seed.achievements)) return student
+
+    const existingIds = new Set((student.achievements || []).map(a => a.id))
+    const missing = seed.achievements.filter(a => !existingIds.has(a.id))
+    if (missing.length === 0) return student
+
+    changed = true
+    return {
+      ...student,
+      achievements: [...(student.achievements || []), ...missing]
+    }
+  })
+
+  return { changed, data: { ...data, students } }
+}
+
 function read() {
   const raw = localStorage.getItem(KEY)
   if (!raw) {
@@ -25,11 +63,13 @@ function read() {
     return structuredClone(sampleData)
   }
   const parsed = JSON.parse(raw)
-  const migrated = migrateRollNumbers(parsed)
-  if (migrated.changed) {
-    write(migrated.data)
+  const migratedStudents = migrateSeedStudents(parsed)
+  const migratedRolls = migrateRollNumbers(migratedStudents.data)
+  const migratedAchievements = migrateSeedAchievements(migratedRolls.data)
+  if (migratedStudents.changed || migratedRolls.changed || migratedAchievements.changed) {
+    write(migratedAchievements.data)
   }
-  return migrated.data
+  return migratedAchievements.data
 }
 
 function write(data) {
@@ -54,6 +94,12 @@ export function addStudent(student) {
 export function updateStudent(updated) {
   const store = read()
   store.students = store.students.map(s => s.id === updated.id ? updated : s)
+  write(store)
+}
+
+export function deleteStudent(studentId) {
+  const store = read()
+  store.students = store.students.filter(s => s.id !== studentId)
   write(store)
 }
 

@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import StudentCard from '../components/StudentCard'
 import StudentForm from '../components/forms/StudentForm'
 import AchievementForm from '../components/forms/AchievementForm'
-import { getAllStudents, addStudent, addAchievement, deleteAchievement } from '../services/storage'
+import { getAllStudents, addStudent, addAchievement, deleteAchievement, deleteStudent } from '../services/storage'
+import { notify } from '../services/notifications'
 
 export default function AdminDashboard() {
   const [students, setStudents] = useState(getAllStudents())
@@ -36,6 +37,15 @@ export default function AdminDashboard() {
     deleteAchievement(selected.id, achievementId)
     setStudents(getAllStudents())
     setSelected(getAllStudents().find(s => s.id === selected.id))
+  }
+
+  function handleDeleteStudent() {
+    if (!selected) return
+    const confirmed = window.confirm(`Delete student "${selected.name}" and all achievements?`)
+    if (!confirmed) return
+    deleteStudent(selected.id)
+    notify('Student deleted successfully', 'success')
+    refresh()
   }
 
   const filteredStudents = students.filter(student =>
@@ -83,6 +93,9 @@ export default function AdminDashboard() {
             </div>
 
             <AchievementForm onSave={handleAddAchievementForSelected} />
+            <button className="btn btn-danger" type="button" onClick={handleDeleteStudent}>
+              Delete Student
+            </button>
           </section>
         ) : (
           <div className="card small empty">Select a student to manage achievements.</div>
