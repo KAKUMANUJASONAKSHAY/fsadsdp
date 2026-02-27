@@ -6,10 +6,23 @@ const seedUsers = [
     id: 'u_admin',
     name: 'Admin User',
     email: 'admin@gmail.com',
-    password: 'admin123',
+    password: 'Admin@123',
     role: 'admin'
   }
 ]
+
+export function validatePassword(password) {
+  if (!password || password.length < 8) {
+    return 'Password must be at least 8 characters long'
+  }
+  if (!/[0-9]/.test(password)) {
+    return 'Password must include at least one number'
+  }
+  if (!/[!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?]/.test(password)) {
+    return 'Password must include at least one special character'
+  }
+  return ''
+}
 
 function readUsers() {
   const raw = localStorage.getItem(USERS_KEY)
@@ -28,7 +41,11 @@ export function signUpUser(userInput) {
   const users = readUsers()
   const exists = users.some(u => u.email.toLowerCase() === userInput.email.toLowerCase())
   if (exists) {
-    throw new Error('Email already exists')
+    throw new Error('Account already exists with this email/username. Please log in.')
+  }
+  const passwordError = validatePassword(userInput.password)
+  if (passwordError) {
+    throw new Error(passwordError)
   }
 
   const user = {
@@ -54,15 +71,7 @@ export function loginUser(identifier, password) {
   })
 
   if (matchedUser) return matchedUser
-
-  // Demo mode: allow login with any credentials.
-  return {
-    id: 'u_demo_' + Date.now(),
-    name: identifier || 'Demo User',
-    email: identifier?.includes('@') ? identifier : `${identifier || 'demo'}@achievohub.local`,
-    role: 'student',
-    studentId: 's1'
-  }
+  return null
 }
 
 export function setSession(user) {

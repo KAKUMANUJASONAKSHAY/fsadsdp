@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
+import ToastHost from './components/ToastHost'
 import AdminDashboard from './pages/AdminDashboard'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
@@ -12,6 +13,7 @@ import SignUp from './pages/SignUp'
 import StudentDashboard from './pages/StudentDashboard'
 import StudentProfile from './pages/StudentProfile'
 import { getSession } from './services/auth'
+import { initTheme } from './services/theme'
 
 function RequireAuth({ children }) {
   const session = getSession()
@@ -32,6 +34,9 @@ function RequireAdmin({ children }) {
 export default function App() {
   const location = useLocation()
   const hideChrome = ['/','/login','/signup'].includes(location.pathname)
+  useEffect(() => {
+    initTheme()
+  }, [])
 
   return (
     <div className="appShell">
@@ -92,6 +97,7 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
+      <ToastHost />
       {!hideChrome && <Footer />}
     </div>
   )

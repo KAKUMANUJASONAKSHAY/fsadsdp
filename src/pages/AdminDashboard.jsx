@@ -8,6 +8,7 @@ import { getAllStudents, addStudent, addAchievement, deleteAchievement } from '.
 export default function AdminDashboard() {
   const [students, setStudents] = useState(getAllStudents())
   const [selected, setSelected] = useState(null)
+  const [query, setQuery] = useState('')
 
   function refresh() {
     setStudents(getAllStudents())
@@ -37,9 +38,26 @@ export default function AdminDashboard() {
     setSelected(getAllStudents().find(s => s.id === selected.id))
   }
 
+  const filteredStudents = students.filter(student =>
+    String(student.name || '').toLowerCase().includes(query.trim().toLowerCase()) ||
+    String(student.roll || '').toLowerCase().includes(query.trim().toLowerCase())
+  )
+  const studentCount = students.length
+  const achievementCount = students.reduce((acc, s) => acc + s.achievements.length, 0)
+
   return (
     <div className="container page pageNarrow">
       <aside className="stack">
+        <section className="card statStrip">
+          <article>
+            <div className="small">Students</div>
+            <div className="statValue">{studentCount}</div>
+          </article>
+          <article>
+            <div className="small">Achievements</div>
+            <div className="statValue">{achievementCount}</div>
+          </article>
+        </section>
         <StudentForm onSave={handleAddStudent} />
 
         {selected ? (
@@ -76,6 +94,13 @@ export default function AdminDashboard() {
         <div style={{ textAlign: 'center' }}>
           <Link to="/" className="link">Back to login</Link>
         </div>
+        <input
+          className="control"
+          type="text"
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          placeholder="Search students by name or ID"
+        />
 
         <div
           className="studentGrid"
@@ -84,7 +109,7 @@ export default function AdminDashboard() {
             justifyContent: 'center'
           }}
         >
-          {students.map(student => (
+          {filteredStudents.map(student => (
             <div key={student.id} onClick={() => handleSelect(student.id)} className="clickable">
               <StudentCard student={student} />
             </div>

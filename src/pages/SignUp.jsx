@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getAllStudents } from '../services/storage'
-import { signUpUser } from '../services/auth'
+import { signUpUser, validatePassword } from '../services/auth'
+import { notify } from '../services/notifications'
 
 export default function SignUp() {
   const navigate = useNavigate()
@@ -12,13 +13,24 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [role, setRole] = useState('student')
   const [error, setError] = useState('')
+  const hasLength = password.length >= 8
+  const hasNumber = /[0-9]/.test(password)
+  const hasSpecial = /[!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?]/.test(password)
 
   function submit(e) {
     e.preventDefault()
     setError('')
 
+    const passwordError = validatePassword(password)
+    if (passwordError) {
+      setError(passwordError)
+      notify(passwordError, 'error')
+      return
+    }
+
     if (password !== confirmPassword) {
       setError('Passwords do not match')
+      notify('Passwords do not match', 'error')
       return
     }
 
@@ -30,9 +42,11 @@ export default function SignUp() {
         role,
         studentId: role === 'student' ? (students[0]?.id || '') : ''
       })
+      notify('Account created successfully. Please log in.', 'success')
       navigate('/login')
     } catch (err) {
       setError(err.message)
+      notify(err.message, 'error')
     }
   }
 
@@ -59,11 +73,14 @@ export default function SignUp() {
           />
 
           <div className="passwordMeter" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
+            <span className={hasLength ? 'meterOn' : ''} />
+            <span className={hasLength ? 'meterOn' : ''} />
+            <span className={hasNumber ? 'meterOn' : ''} />
+            <span className={hasSpecial ? 'meterOn' : ''} />
+            <span className={hasLength && hasNumber && hasSpecial ? 'meterOn' : ''} />
+          </div>
+          <div className="small">
+            Password must be 8+ characters and include a number and special character.
           </div>
 
           <input

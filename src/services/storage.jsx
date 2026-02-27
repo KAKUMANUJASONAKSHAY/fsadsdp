@@ -5,7 +5,7 @@ const KEY = 'ecm_storage_v1'
 function migrateRollNumbers(data) {
   let changed = false
   let counter = 1
-  const students = data.students.map((s, i) => {
+  const students = data.students.map(s => {
     const roll = String(s.roll || '')
     const isValidNewFormat = /^\d{6}$/.test(roll)
     if (!isValidNewFormat) {
